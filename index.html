@@ -2,71 +2,73 @@
 <html lang="es">
 <head>
   <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Flores Para Ti</title>
   <style>
     body {
       margin: 0;
       padding: 0;
-      height: 100vh; /* ocupar toda la pantalla */
+      min-height: 100vh;
       background: #0f0f1a;
       color: #fff;
       font-family: 'Arial Rounded MT Bold', sans-serif;
       text-align: center;
-      overflow: hidden; /* evita scroll */
+      overflow: hidden;
       position: relative;
     }
 
     h1 {
-      font-size: 50px;
+      font-size: clamp(2rem, 5vw, 4rem);
       color: #fff200;
       text-shadow: 0 0 15px #fff200, 0 0 30px #fffc7f;
-      margin-top: 20px;
+      margin-top: 1rem;
+      padding: 0 1rem;
     }
 
     .audio-box {
-      background: #fff8b0; /* amarillo pastel */
-      color: #222; /* contraste con el fondo */
-      border-radius: 20px;
+      background: #fff8b0;
+      color: #222;
+      border-radius: 1.25rem;
       display: inline-block;
-      padding: 15px 20px;
-      margin-top: 10px;
+      padding: 1rem 1.5rem;
+      margin-top: 1rem;
       box-shadow: 0 0 15px #ffec80, 0 0 30px #ffe066;
-      font-size: 14px;
+      font-size: clamp(0.8rem, 2vw, 1rem);
       font-weight: bold;
-      max-width: 400px;
+      max-width: 90%;
     }
 
     audio {
-      width: 220px;
+      width: 100%;
+      max-width: 300px;
       outline: none;
-      margin-top: 10px;
+      margin-top: 0.5rem;
     }
 
-    /* Ramo fijo */
     .ramo {
-      width: 300px; /* tamaño reducido */
-      margin-top: 30px;
+      width: clamp(150px, 25vw, 300px);
+      margin-top: 1.5rem;
       filter: drop-shadow(0px 0px 20px yellow);
       display: block;
       margin-left: auto;
-      margin-right: auto; /* centrado */
+      margin-right: auto;
     }
 
-    /* Estrellas cayendo */
     .estrella {
       position: absolute;
-      width: 5px;
-      height: 5px;
+      width: 0.8vw;
+      height: 0.8vw;
+      max-width: 8px;
+      max-height: 8px;
       background: yellow;
       border-radius: 50%;
       top: -10px;
       animation: caer linear infinite;
     }
 
-    /* Flores cayendo */
     .flor-cayendo {
       position: absolute;
-      width: 50px;
+      width: clamp(30px, 8vw, 50px);
       top: -60px;
       animation: caer linear infinite;
     }
@@ -79,6 +81,27 @@
       100% {
         transform: translateY(100vh) rotate(360deg);
         opacity: 0;
+      }
+    }
+
+    /* Ajustes para pantallas pequeñas */
+    @media (max-width: 480px) {
+      h1 {
+        font-size: 2rem;
+      }
+      .audio-box {
+        font-size: 0.9rem;
+        padding: 0.8rem 1rem;
+      }
+      .ramo {
+        width: 40vw;
+      }
+    }
+
+    /* Ajustes para tablets */
+    @media (max-width: 768px) and (min-width: 481px) {
+      .ramo {
+        width: 30vw;
       }
     }
   </style>
@@ -97,14 +120,28 @@
     </audio>
   </div>
 
-  <!-- Ramo fijo -->
   <div>
     <img src="ramo.png" alt="Ramo de flores" class="ramo">
   </div>
 
   <script>
+    // Detectar tamaño de pantalla
+    let ancho = window.innerWidth;
+    let numEstrellas, numFlores;
+
+    if (ancho <= 480) { // móvil
+      numEstrellas = 20;
+      numFlores = 5;
+    } else if (ancho <= 768) { // tablet
+      numEstrellas = 30;
+      numFlores = 10;
+    } else { // computadora
+      numEstrellas = 40;
+      numFlores = 15;
+    }
+
     // Generar estrellitas cayendo
-    for (let i = 0; i < 40; i++) {
+    for (let i = 0; i < numEstrellas; i++) {
       let estrella = document.createElement("div");
       estrella.classList.add("estrella");
       estrella.style.left = Math.random() * window.innerWidth + "px";
@@ -114,15 +151,20 @@
     }
 
     // Generar flores cayendo
-    for (let i = 0; i < 15; i++) {
+    for (let i = 0; i < numFlores; i++) {
       let flor = document.createElement("img");
-      flor.src = "flor.png"; // tu flor suelta
+      flor.src = "flor.png";
       flor.classList.add("flor-cayendo");
       flor.style.left = Math.random() * window.innerWidth + "px";
       flor.style.animationDuration = (Math.random() * 7 + 5) + "s";
       flor.style.animationDelay = Math.random() * 5 + "s";
       document.body.appendChild(flor);
     }
+
+    // Actualizar al redimensionar la ventana
+    window.addEventListener('resize', () => {
+      location.reload(); // recarga para ajustar la cantidad y tamaño
+    });
   </script>
 
 </body>
